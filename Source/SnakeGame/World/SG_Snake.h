@@ -25,10 +25,10 @@ protected:
     virtual void BeginPlay() override;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-    TSubclassOf<AActor> SnakeHeadClass;
+    TSubclassOf<ASG_SnakeLink> SnakeHeadClass;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-    TSubclassOf<AActor> SnakeLinkClass;
+    TSubclassOf<ASG_SnakeLink> SnakeLinkClass;
 
 public:
     virtual void Tick(float DeltaTime) override;
