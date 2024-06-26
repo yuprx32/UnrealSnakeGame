@@ -9,6 +9,7 @@
 
 class ASG_Grid;
 class ASG_Snake;
+class ASG_Food;
 class UDataTable;
 class AExponentialHeightFog;
 class UInputAction;
@@ -37,11 +38,14 @@ protected:
     UPROPERTY(EditDefaultsOnly, meta = (ClampMin = "10", ClampMax = "100"), Category = "Settings")
     uint32 CellSize{10};
 
-    UPROPERTY(EditDefaultsOnly)
+    UPROPERTY(EditDefaultsOnly, Category = "Design")
     TSubclassOf<ASG_Grid> GridVisualClass;
 
-    UPROPERTY(EditDefaultsOnly)
+    UPROPERTY(EditDefaultsOnly, Category = "Design")
     TSubclassOf<ASG_Snake> SnakeVisualClass;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Design")
+    TSubclassOf<ASG_Food> FoodVisualClass;
 
     UPROPERTY(EditDefaultsOnly, Category = "Design")
     TObjectPtr<UDataTable> ColorsTable;
@@ -64,6 +68,9 @@ private:
 
     UPROPERTY()
     ASG_Snake* SnakeVisual;
+
+    UPROPERTY()
+    ASG_Food* FoodVisual;
 
     UPROPERTY()
     AExponentialHeightFog* Fog;

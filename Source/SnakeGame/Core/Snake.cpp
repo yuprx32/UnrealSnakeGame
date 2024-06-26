@@ -27,3 +27,8 @@ void Snake::move(const Input& input)
     m_links.MoveTail(m_links.GetTail(), m_links.GetHead(), m_links.GetHead()->GetValue());
     m_links.GetHead()->GetValue() += Position(m_lastInput.x, m_lastInput.y);
 }
+
+void Snake::increase() 
+{
+    m_links.AddTail(m_links.GetTail()->GetValue());
+}

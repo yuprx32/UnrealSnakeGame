@@ -17,6 +17,7 @@ public:
     const TPositionPtr* body() const { return m_links.GetHead()->GetNextNode(); }
 
     void move(const Input& input);
+    void increase();
 
 private:
     TSnakeList m_links;
