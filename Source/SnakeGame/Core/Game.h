@@ -21,9 +21,24 @@ public:
      * @return TSharedPtr<Grid>  pointer to the grid object
      */
     TSharedPtr<Grid> grid() const { return m_grid; }
+
+    /**
+     * Returns the pointer to the snake object
+     * @return TSharedPtr<Snake>  pointer to the snake object
+     */
     TSharedPtr<Snake> snake() const { return m_snake; }
+
+    /**
+     * Returns the pointer to the food object
+     * @return TSharedPtr<Food>  pointer to the food object
+     */
     TSharedPtr<Food> food() const { return m_food; }
 
+    /**
+     * Updates game
+     * @param deltaSeconds  delta time
+     * @param input  user input
+     */
     void update(float DeltaSeconds, Input input);
 
 private:
