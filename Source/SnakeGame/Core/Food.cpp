@@ -4,7 +4,7 @@
 
 using namespace SnakeGame;
 
-void Food::setPosition(const Position& position) 
+void Food::setPosition(const Position& position)
 {
     m_position = position;
 }

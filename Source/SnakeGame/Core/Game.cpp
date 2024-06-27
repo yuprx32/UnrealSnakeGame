@@ -13,6 +13,8 @@ using namespace SnakeGame;
 SnakeGame::Game::Game(const Settings& settings) : c_settings(settings)
 {
     m_grid = MakeShared<Grid>(settings.gridDims);
+    checkf(m_grid->dim().width / 2 >= settings.snake.defaultSize, TEXT("Snake initial length [%i] doesn't fit grid width [%i]"),
+        settings.snake.defaultSize, m_grid->dim().width);
     m_snake = MakeShared<Snake>(settings.snake);
     m_food = MakeShared<Food>();
 
@@ -25,13 +27,14 @@ void Game::update(float DeltaSeconds, Input input)
 {
     if (m_gameOver || !updateTime(DeltaSeconds)) return;
 
-    move(input);
+    m_snake->move(input);
 
     if (died())
     {
         m_gameOver = true;
         UE_LOG(LogGame, Display, TEXT("Game Over"));
         UE_LOG(LogGame, Display, TEXT("Score: %i"), m_score);
+        return;
     }
 
     if (foodTaken())
@@ -40,17 +43,13 @@ void Game::update(float DeltaSeconds, Input input)
         m_snake->increase();
         generateFood();
     }
-}
 
-void Game::move(Input input)
-{
-    m_snake->move(input);
     updateGrid();
 }
 
 void Game::updateGrid()
 {
-    m_grid->update(m_snake->body(), CellType::Snake);
+    m_grid->update(m_snake->links().GetHead(), CellType::Snake);
     m_grid->printDebug();
 }
 
@@ -74,10 +73,20 @@ bool SnakeGame::Game::died() const
     return m_grid->hitTest(m_snake->head(), CellType::Wall) || m_grid->hitTest(m_snake->head(), CellType::Snake);
 }
 
-void Game::generateFood() 
+void Game::generateFood()
 {
-    m_food->setPosition(m_grid->randomEmptyPosition());
-    m_grid->update(m_food->position(), CellType::Food);
+    Position foodPosition;
+    if (m_grid->randomEmptyPosition(foodPosition))
+    {
+        m_food->setPosition(foodPosition);
+        m_grid->update(m_food->position(), CellType::Food);
+    }
+    else
+    {
+        m_gameOver = true;
+        UE_LOG(LogGame, Display, TEXT("Game Completed"));
+        UE_LOG(LogGame, Display, TEXT("Score: %i"), m_score);
+    }
 }
 
 bool Game::foodTaken() const

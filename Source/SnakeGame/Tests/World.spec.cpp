@@ -6,6 +6,8 @@
 #include "Misc/AutomationTest.h"
 #include "Tests/Utils/TestUtils.h"
 #include "World/SG_Grid.h"
+#include "World/SG_Snake.h"
+#include "World/SG_Food.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/StaticMeshComponent.h"
 #include "World/SG_Grid.h"
@@ -26,7 +28,7 @@ void FSnakeWorld::Define()
 {
     using namespace LifeExe::Test;
 
-    Describe("WorldGrid",
+    Describe("World.Grid",
         [this]()
         {
             BeforeEach(
@@ -96,13 +98,22 @@ void FSnakeWorld::Define()
                     World = GetTestGameWorld();
                 });
 
-            It("OnlyOneValidGridShouldExist",
+            It("OnlyOneValidModelActorShouldExist",
                 [this]()
                 {
-                    TArray<AActor*> Grids;
-                    UGameplayStatics::GetAllActorsOfClass(World, ASG_Grid::StaticClass(), Grids);
-                    TestTrueExpr(Grids.Num() == 1);
-                    TestNotNull("Grid actor exists", Grids[0]);
+                    TArray<AActor*> Actors;
+
+                    UGameplayStatics::GetAllActorsOfClass(World, ASG_Grid::StaticClass(), Actors);
+                    TestTrueExpr(Actors.Num() == 1);
+                    TestNotNull("Grid actor exists", Actors[0]);
+
+                    UGameplayStatics::GetAllActorsOfClass(World, ASG_Snake::StaticClass(), Actors);
+                    TestTrueExpr(Actors.Num() == 1);
+                    TestNotNull("Snake actor exists", Actors[0]);
+
+                    UGameplayStatics::GetAllActorsOfClass(World, ASG_Food::StaticClass(), Actors);
+                    TestTrueExpr(Actors.Num() == 1);
+                    TestNotNull("Food actor exists", Actors[0]);
                 });
         });
 }

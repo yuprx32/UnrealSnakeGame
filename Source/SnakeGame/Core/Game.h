@@ -36,7 +36,6 @@ private:
     bool m_gameOver{false};
     uint32 m_score{0};
 
-    void move(Input input);
     void updateGrid();
     bool updateTime(float DeltaSeconds);
     bool died() const;

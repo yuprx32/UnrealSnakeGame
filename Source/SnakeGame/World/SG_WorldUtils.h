@@ -20,8 +20,7 @@ public:
         {
             const FBox Box = Mesh->GetStaticMesh()->GetBoundingBox();
             const auto Size = Box.GetSize();
-            check(Size.X);
-            check(Size.Y);
+            check(!Size.IsZero());
             Mesh->SetRelativeScale3D(FVector(WorldSize / Size));
         }
     }

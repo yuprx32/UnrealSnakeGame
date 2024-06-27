@@ -14,7 +14,6 @@ public:
 
     const TSnakeList& links() const { return m_links; }
     Position head() const { return m_links.GetHead()->GetValue(); }
-    const TPositionPtr* body() const { return m_links.GetHead()->GetNextNode(); }
 
     void move(const Input& input);
     void increase();

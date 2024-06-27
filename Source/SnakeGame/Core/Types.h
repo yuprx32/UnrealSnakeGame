@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Containers/List.h"
+#include "SnakeGame/Containers/List.h"
 
 namespace SnakeGame
 {
@@ -16,7 +16,9 @@ struct Dim
 
 struct Position
 {
+    Position(const Position& position = Position::Zero) : x(position.x), y(position.y) {}
     Position(uint32 inX, uint32 inY) : x(inX), y(inY){};
+
     uint32 x;
     uint32 y;
 
@@ -27,6 +29,8 @@ struct Position
 
         return *this;
     }
+
+    FORCEINLINE bool operator==(const Position& rhs) const { return x == rhs.x && y == rhs.y; }
 
     static const Position Zero;
 };
@@ -65,16 +69,7 @@ struct Settings
     float gameSpeed{1.0f};
 };
 
-using TPositionPtr = TDoubleLinkedList<Position>::TDoubleLinkedListNode;
-
-class TSnakeList : public TDoubleLinkedList<Position>
-{
-public:
-    void MoveTail(TPositionPtr* Tail, TPositionPtr* Head, const Position& Pos)
-    {
-        RemoveNode(Tail);
-        InsertNode(Pos, Head->GetNextNode());
-    }
-};
+using TSnakeList = TDoubleLinkedList<Position>;
+using TPositionPtr = TSnakeList::TDoubleLinkedListNode;
 
 }  // namespace SnakeGame
