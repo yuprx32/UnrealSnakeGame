@@ -41,6 +41,10 @@ public:
      */
     void update(float DeltaSeconds, Input input);
 
+    uint32 score() const { return m_score; }
+
+    void subscribeOnGameplayEvent(GameplayEventCallback callback);
+
 private:
     const Settings c_settings;
     TSharedPtr<Grid> m_grid;
@@ -50,6 +54,8 @@ private:
     float m_moveSeconds{0.0f};
     bool m_gameOver{false};
     uint32 m_score{0};
+
+    GameplayEventCallback m_gameplayEventCallback;
 
     void updateGrid();
     bool updateTime(float DeltaSeconds);

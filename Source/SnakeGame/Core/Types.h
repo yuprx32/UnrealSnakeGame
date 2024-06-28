@@ -72,4 +72,13 @@ struct Settings
 using TSnakeList = TDoubleLinkedList<Position>;
 using TPositionPtr = TSnakeList::TDoubleLinkedListNode;
 
+enum class GameplayEvent
+{
+    GameOver = 0,
+    GameCompleted,
+    FoodTaken
+};
+
+using GameplayEventCallback = TFunction<void(GameplayEvent)>;
+
 }  // namespace SnakeGame
