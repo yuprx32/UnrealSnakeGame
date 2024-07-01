@@ -200,8 +200,8 @@ void ASG_GameMode::SubscribeOnGameEvents()
                     UE_LOG(LogSnakeGameMode, Display, TEXT("Game Completed"));
                     UE_LOG(LogSnakeGameMode, Display, TEXT("Score: %i"), Game->score());
                     break;
-                case GameplayEvent::FoodTaken: 
-                    UE_LOG(LogSnakeGameMode, Display, TEXT("Food Taken")); 
+                case GameplayEvent::FoodTaken:
+                    UE_LOG(LogSnakeGameMode, Display, TEXT("Food Taken"));
                     FoodVisual->Explode();
                     break;
                 default: break;
