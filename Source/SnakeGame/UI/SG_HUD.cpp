@@ -11,39 +11,43 @@ void ASG_HUD::BeginPlay()
 
     GameplayWidget = CreateWidget<USG_GameplayWidget>(GetWorld(), GameplayWidgetClass);
     check(GameplayWidget);
+    GameWidgets.Add(EUIMatchState::GameInProgress, GameplayWidget);
 
     GameOverWidget = CreateWidget<USG_GameOverWidget>(GetWorld(), GameOverClass);
     check(GameOverWidget);
+    GameWidgets.Add(EUIMatchState::GameOver, GameOverWidget);
 
-    GameplayWidget->AddToViewport();
-    GameOverWidget->AddToViewport();
-
-    GameplayWidget->SetVisibility(ESlateVisibility::Visible);
-    GameOverWidget->SetVisibility(ESlateVisibility::Collapsed);
+    for (auto& [UIState, GameWidget] : GameWidgets)
+    {
+        if (GameWidget)
+        {
+            GameWidget->AddToViewport();
+            GameWidget->SetVisibility(ESlateVisibility::Collapsed);
+        }
+    }
 }
 
 void ASG_HUD::SetModel(const TSharedPtr<SnakeGame::Game>& InGame)
 {
     if (!InGame) return;
 
-    GameplayWidget->SetVisibility(ESlateVisibility::Visible);
-    GameOverWidget->SetVisibility(ESlateVisibility::Collapsed);
+    using namespace SnakeGame;
 
     Game = InGame;
 
+    SetUIMatchState(EUIMatchState::GameInProgress);
     GameplayWidget->UpdateScore(InGame->score());
-
-    using namespace SnakeGame;
 
     InGame->subscribeOnGameplayEvent(
         [&](GameplayEvent Event)
         {
             switch (Event)
             {
-                case GameplayEvent::FoodTaken: GameplayWidget->UpdateScore(InGame->score()); break;
-                case GameplayEvent::GameOver:
-                    GameplayWidget->SetVisibility(ESlateVisibility::Collapsed);
-                    GameOverWidget->SetVisibility(ESlateVisibility::Visible);
+                case GameplayEvent::FoodTaken:  //
+                    GameplayWidget->UpdateScore(InGame->score());
+                    break;
+                case GameplayEvent::GameOver:  //
+                    SetUIMatchState(EUIMatchState::GameOver);
                     break;
             }
         });
@@ -56,5 +60,19 @@ void ASG_HUD::Tick(float DeltaSeconds)
     if (Game.IsValid())
     {
         GameplayWidget->SetGameTime(Game.Pin()->gameTime());
+    }
+}
+
+void ASG_HUD::SetUIMatchState(EUIMatchState MatchState)
+{
+    if (CurrentWidget)
+    {
+        CurrentWidget->SetVisibility(ESlateVisibility::Collapsed);
+    }
+
+    if (GameWidgets.Contains(MatchState))
+    {
+        CurrentWidget = GameWidgets[MatchState];
+        CurrentWidget->SetVisibility(ESlateVisibility::Visible);
     }
 }

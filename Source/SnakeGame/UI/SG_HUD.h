@@ -9,10 +9,20 @@
 class USG_GameplayWidget;
 class USG_GameOverWidget;
 
+UENUM()
+enum class EUIMatchState : uint8
+{
+    StartGame = 0,
+    GameInProgress,
+    GameOver,
+    GameCompleted
+};
+
 namespace SnakeGame
 {
 class Game;
-}
+
+}  // namespace SnakeGame
 
 UCLASS()
 class SNAKEGAME_API ASG_HUD : public AHUD
@@ -40,5 +50,13 @@ private:
     UPROPERTY()
     TObjectPtr<USG_GameOverWidget> GameOverWidget;
 
+    UPROPERTY()
+    TMap<EUIMatchState, TObjectPtr<UUserWidget>> GameWidgets;
+
+    UPROPERTY()
+    TObjectPtr<UUserWidget> CurrentWidget;
+
     TWeakPtr<SnakeGame::Game> Game;
+
+    void SetUIMatchState(EUIMatchState MatchState);
 };
