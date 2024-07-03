@@ -21,6 +21,7 @@ public:
     void SetModel(const TSharedPtr<SnakeGame::Food>& InFood, uint32 InCellSize, const SnakeGame::Dim& InDims);
     void UpdateColor(const FLinearColor& Color);
     void Explode();
+    void Hide();
 
 protected:
     UPROPERTY(VisibleAnywhere)
