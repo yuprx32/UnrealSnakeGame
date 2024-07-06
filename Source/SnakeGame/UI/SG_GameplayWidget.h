@@ -15,7 +15,8 @@ class SNAKEGAME_API USG_GameplayWidget : public UUserWidget
 
 public:
     void SetGameTime(float Seconds);
-    void UpdateScore(uint32 Score);
+    void SetScore(uint32 Score);
+    void SetResetGameKeyName(const FString& ResetGameKeyName);
 
 private:
     UPROPERTY(meta = (BindWidget))
@@ -23,4 +24,7 @@ private:
 
     UPROPERTY(meta = (BindWidget))
     TObjectPtr<UTextBlock> ScoreText;
+
+    UPROPERTY(meta = (BindWidget))
+    TObjectPtr<UTextBlock> ResetGameText;
 };

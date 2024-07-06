@@ -14,9 +14,13 @@ class SNAKEGAME_API USG_GameOverWidget : public UUserWidget
     GENERATED_BODY()
 
 public:
-    void UpdateScore(uint32 Score);
+    void SetScore(uint32 Score);
+    void SetResetGameKeyName(const FString& ResetGameKeyName);
 
 private:
     UPROPERTY(meta = (BindWidget))
     TObjectPtr<UTextBlock> ScoreText;
+
+    UPROPERTY(meta = (BindWidget))
+    TObjectPtr<UTextBlock> ResetGameText;
 };

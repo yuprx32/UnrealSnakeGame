@@ -3,6 +3,9 @@
 #include "Core/Types.h"
 #include "CoreMinimal.h"
 #include "Components/StaticMeshComponent.h"
+#include "InputAction.h"
+#include "InputMappingContext.h"
+#include "EnhancedActionKeyMapping.h"
 
 namespace SnakeGame
 {
@@ -39,6 +42,14 @@ public:
     {
         const FString FormattedScore = FString::Printf(TEXT("%02i"), Score);
         return FText::FromString(FormattedScore);
+    }
+
+    static FString FindActionKeyName(const TObjectPtr<UInputMappingContext>& InputMapping, const TObjectPtr<UInputAction>& Action)
+    {
+        auto* FoundActionKeyMapping = InputMapping->GetMappings().FindByPredicate([&](const FEnhancedActionKeyMapping& Mapping)  //
+            { return Mapping.Action == Action; });
+
+        return FoundActionKeyMapping ? FoundActionKeyMapping->Key.GetDisplayName().ToString() : FString{};
     }
 };
 }  // namespace SnakeGame

@@ -11,11 +11,11 @@ void ASG_HUD::BeginPlay()
 
     GameplayWidget = CreateWidget<USG_GameplayWidget>(GetWorld(), GameplayWidgetClass);
     check(GameplayWidget);
-    GameWidgets.Add(EUIMatchState::GameInProgress, GameplayWidget);
+    GameWidgets.Add(EUIGameState::GameInProgress, GameplayWidget);
 
     GameOverWidget = CreateWidget<USG_GameOverWidget>(GetWorld(), GameOverWidgetClass);
     check(GameOverWidget);
-    GameWidgets.Add(EUIMatchState::GameOver, GameOverWidget);
+    GameWidgets.Add(EUIGameState::GameOver, GameOverWidget);
 
     for (auto& [UIState, GameWidget] : GameWidgets)
     {
@@ -35,9 +35,9 @@ void ASG_HUD::SetModel(const TSharedPtr<SnakeGame::Game>& InGame)
 
     Game = InGame;
 
-    SetUIMatchState(EUIMatchState::GameInProgress);
-    GameplayWidget->UpdateScore(InGame->score());
-    GameOverWidget->UpdateScore(InGame->score());
+    SetUIMatchState(EUIGameState::GameInProgress);
+    GameplayWidget->SetScore(InGame->score());
+    GameOverWidget->SetScore(InGame->score());
 
     InGame->subscribeOnGameplayEvent(
         [&](GameplayEvent Event)
@@ -45,27 +45,34 @@ void ASG_HUD::SetModel(const TSharedPtr<SnakeGame::Game>& InGame)
             switch (Event)
             {
                 case GameplayEvent::FoodTaken:  //
-                    GameplayWidget->UpdateScore(InGame->score());
+                    GameplayWidget->SetScore(InGame->score());
                     break;
+                case GameplayEvent::GameCompleted: [[fallthrough]];
                 case GameplayEvent::GameOver:  //
-                    GameOverWidget->UpdateScore(InGame->score());
-                    SetUIMatchState(EUIMatchState::GameOver);
+                    GameOverWidget->SetScore(InGame->score());
+                    SetUIMatchState(EUIGameState::GameOver);
                     break;
             }
         });
+}
+
+void ASG_HUD::SetInputKeyNames(const FString& ResetGameKeyName)
+{
+    GameplayWidget->SetResetGameKeyName(ResetGameKeyName);
+    GameOverWidget->SetResetGameKeyName(ResetGameKeyName);
 }
 
 void ASG_HUD::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
 
-    if (Game.IsValid() && MatchState == EUIMatchState::GameInProgress)
+    if (Game.IsValid() && MatchState == EUIGameState::GameInProgress)
     {
         GameplayWidget->SetGameTime(Game.Pin()->gameTime());
     }
 }
 
-void ASG_HUD::SetUIMatchState(EUIMatchState InMatchState)
+void ASG_HUD::SetUIMatchState(EUIGameState InMatchState)
 {
     if (CurrentWidget)
     {

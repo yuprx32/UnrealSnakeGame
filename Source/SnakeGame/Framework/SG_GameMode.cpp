@@ -16,6 +16,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "UI/SG_HUD.h"
+#include "World/SG_WorldUtils.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogSnakeGameMode, All, All)
 
@@ -64,20 +65,22 @@ void ASG_GameMode::StartPlay()
 
     FindFog();
 
-    // Update colors
+    // update colors
     check(ColorsTable);
     const auto RowsCount = ColorsTable->GetRowNames().Num();
     check(RowsCount >= 1);
     ColorTableIndex = FMath::RandRange(0, RowsCount - 1);
     UpdateColors();
 
-    //
+    // setup player input
     SetupInput();
 
-    //
+    // setup user interface
     HUD = Cast<ASG_HUD>(PC->GetHUD());
     check(HUD);
     HUD->SetModel(Game);
+    const FString ResetGameKeyName = SnakeGame::WorldUtils::FindActionKeyName(InputMapping, ResetGameInputAction);
+    HUD->SetInputKeyNames(ResetGameKeyName);
 }
 
 void ASG_GameMode::NextColor()
