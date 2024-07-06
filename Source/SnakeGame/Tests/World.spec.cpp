@@ -13,6 +13,7 @@
 #include "World/SG_Grid.h"
 #include "Core/Grid.h"
 #include "World/SG_WorldTypes.h"
+#include "World/SG_WorldUtils.h"
 
 BEGIN_DEFINE_SPEC(FSnakeWorld, "Snake",
     EAutomationTestFlags::ApplicationContextMask | EAutomationTestFlags::ProductFilter | EAutomationTestFlags::HighPriority)
@@ -88,7 +89,7 @@ void FSnakeWorld::Define()
                 });
         });
 
-    Describe("WorldGrid",
+    Describe("World",
         [this]()
         {
             BeforeEach(
@@ -114,6 +115,33 @@ void FSnakeWorld::Define()
                     UGameplayStatics::GetAllActorsOfClass(World, ASG_Food::StaticClass(), Actors);
                     TestTrueExpr(Actors.Num() == 1);
                     TestNotNull("Food actor exists", Actors[0]);
+                });
+        });
+
+    Describe("World.Utils",
+        [this]()
+        {
+            It("SecondsShouldBeFormattedCorrectly",
+                [this]()
+                {
+                    using namespace SnakeGame;
+
+                    TestTrueExpr(WorldUtils::FormatSeconds(0.0f).EqualTo(FText::FromString("00:00")));
+                    TestTrueExpr(WorldUtils::FormatSeconds(7.0f).EqualTo(FText::FromString("00:07")));
+                    TestTrueExpr(WorldUtils::FormatSeconds(10.0f).EqualTo(FText::FromString("00:10")));
+                    TestTrueExpr(WorldUtils::FormatSeconds(65.0f).EqualTo(FText::FromString("01:05")));
+                    TestTrueExpr(WorldUtils::FormatSeconds(605.0f).EqualTo(FText::FromString("10:05")));
+                });
+
+            It("ScoreShouldBeFormattedCorrectly",
+                [this]()
+                {
+                    using namespace SnakeGame;
+
+                    TestTrueExpr(WorldUtils::FormatScore(0).EqualTo(FText::FromString("00")));
+                    TestTrueExpr(WorldUtils::FormatScore(7).EqualTo(FText::FromString("07")));
+                    TestTrueExpr(WorldUtils::FormatScore(13).EqualTo(FText::FromString("13")));
+                    TestTrueExpr(WorldUtils::FormatScore(999).EqualTo(FText::FromString("999")));
                 });
         });
 }
