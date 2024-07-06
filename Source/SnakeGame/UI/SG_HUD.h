@@ -39,7 +39,7 @@ protected:
     TSubclassOf<USG_GameplayWidget> GameplayWidgetClass;
 
     UPROPERTY(EditDefaultsOnly, Category = "UI")
-    TSubclassOf<USG_GameOverWidget> GameOverClass;
+    TSubclassOf<USG_GameOverWidget> GameOverWidgetClass;
 
     virtual void BeginPlay() override;
 
@@ -57,6 +57,7 @@ private:
     TObjectPtr<UUserWidget> CurrentWidget;
 
     TWeakPtr<SnakeGame::Game> Game;
+    EUIMatchState MatchState;
 
-    void SetUIMatchState(EUIMatchState MatchState);
+    void SetUIMatchState(EUIMatchState InMatchState);
 };
